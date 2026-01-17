@@ -10,15 +10,35 @@ class PeminjamanController extends Controller
 {
   public function store(Request $request, $id)
   {
-    // 1. Buat data utama peminjaman
+    // Cek apakah siswa ini sudah punya pinjaman aktif untuk barang tersebut
+    $adaPinjamanAktif = Peminjaman::where("user_id", auth()->id())
+      ->whereIn("status", ["menunggu", "dipinjam"])
+      ->whereHas("alats", function ($query) use ($id) {
+        $query->where("alats.id", $id);
+      })
+      ->exists();
+
+    if ($adaPinjamanAktif) {
+      return redirect()
+        ->back()
+        ->with("error", "Kamu masih memiliki pinjaman aktif untuk alat ini!");
+    }
+
+    // Cek Stok (Keamanan tambahan)
+    $alat = Alat::findOrFail($id);
+    if ($alat->jumlah < 1) {
+      return redirect()
+        ->back()
+        ->with("error", "Maaf, stok barang baru saja habis.");
+    }
+
+    // Proses Simpan (Kode yang sudah kamu buat sebelumnya)
     $pinjam = Peminjaman::create([
-      "user_id" => Auth::id(), // ID orang yang lagi login
+      "user_id" => auth()->id(),
       "tanggal_pinjam" => now(),
-      "status" => "menunggu", // Default awal
+      "status" => "menunggu",
     ]);
 
-    // 2. Hubungkan ke alat (Simpan ke tabel detail_peminjamans)
-    // Kita pakai relasi attach() karena Many-to-Many
     $pinjam->alats()->attach($id, ["jumlah" => 1]);
 
     return redirect()

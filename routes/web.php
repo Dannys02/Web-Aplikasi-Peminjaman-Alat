@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AlatController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PeminjamanController;
+use App\Http\Controllers\KategoriController;
 
 Route::get("/", function () {
   return view("welcome");
@@ -17,9 +18,38 @@ Route::post("/pinjam/{id}", [PeminjamanController::class, "store"])->name(
   "pinjam.alat"
 );
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::post('/admin/konfirmasi/{id}', [PeminjamanController::class, 'konfirmasi'])->name('admin.konfirmasi');
-    Route::post('/admin/kembalikan/{id}', [PeminjamanController::class, 'kembalikan'])->name('admin.kembalikan');
+Route::middleware(["auth", "role:admin"])->group(function () {
+  // KONFIRMASI PINJAMAN
+  Route::post("/admin/konfirmasi/{id}", [
+    PeminjamanController::class,
+    "konfirmasi",
+  ])->name("admin.konfirmasi");
+
+  // KONFIRMASI KEMBALIKAN
+  Route::post("/admin/kembalikan/{id}", [
+    PeminjamanController::class,
+    "kembalikan",
+  ])->name("admin.kembalikan");
+
+  // CRUD ALAT
+  Route::get("/admin/tambah-alat", [AlatController::class, "create"])->name(
+    "admin.tambah.alat"
+  );
+  Route::post("/admin/simpan-alat", [AlatController::class, "store"])->name(
+    "admin.simpan.alat"
+  );
+
+  // CRUD KATEGORI
+  Route::get("/admin/kategori", [KategoriController::class, "index"])->name(
+    "admin.kategori.create"
+  );
+  Route::post("/admin/kategori", [KategoriController::class, "store"])->name(
+    "admin.kategori.store"
+  );
+  Route::delete("/admin/kategori/{id}", [
+    KategoriController::class,
+    "destroy",
+  ])->name("admin.kategori.destroy");
 });
 
 Route::middleware("auth")->group(function () {

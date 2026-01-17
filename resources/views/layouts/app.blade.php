@@ -37,6 +37,9 @@
           setTimeout(() => {
           document.getElementById("alert").style.display = "none";
           }, 5000);
+          setTimeout(() => {
+          document.getElementById("alert-error").style.display = "none";
+          }, 5000);
         </script>
     </body>
 </html>
