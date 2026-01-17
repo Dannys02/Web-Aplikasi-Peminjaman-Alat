@@ -33,11 +33,10 @@
                 {{ $slot }}
             </main>
         </div>
-        
-        @if(session('success'))
-          <script>
-            alert('{{ session('success') }}');
-          </script>
-        @endif
+        <script>
+          setTimeout(() => {
+          document.getElementById("alert").style.display = "none";
+          }, 5000);
+        </script>
     </body>
 </html>

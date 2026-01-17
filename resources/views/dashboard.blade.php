@@ -5,9 +5,19 @@
     </h2>
   </x-slot>
 
+  @if(session('success'))
+  <div id="alert" class="fixed top-5 w-full  max-w-7xl mx-auto mb-6">
+    <div class="bg-emerald-100 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl shadow-sm flex items-center">
+      <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+      {{ session('success') }}
+    </div>
+  </div>
+  @endif
+
+
   <div class="py-12 bg-gray-50 min-h-screen space-y-8 px-4 sm:px-6 lg:px-8">
 
-  @if(Auth::user()->role && Auth::user()->role->nama_role == 'admin')
+    @if(Auth::user()->role && Auth::user()->role->nama_role == 'admin')
     <!-- ADMIN SAJA -->
     <div class="max-w-7xl mx-auto">
       <div class="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
@@ -128,11 +138,17 @@
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right">
+                  @if ($item->jumlah > 0)
                   <form action="{{ route('pinjam.alat', $item->id) }}" method="POST">
                     @csrf
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-all">
                       Pinjam
                     </button>
+                    @else
+                    <button disabled class="bg-gray-300 text-gray-500 cursor-not-allowed py-2 px-6 rounded-lg text-xs font-bold">
+                      Habis
+                    </button>
+                    @endif
                   </form>
                 </td>
               </tr>
