@@ -5,6 +5,7 @@ use App\Http\Controllers\AlatController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\LaporanController;
 
 Route::get("/", function () {
   return view("welcome");
@@ -41,7 +42,7 @@ Route::middleware(["auth", "role:admin"])->group(function () {
 
   // CRUD KATEGORI
   Route::get("/admin/kategori", [KategoriController::class, "index"])->name(
-    "admin.kategori.create"
+    "admin.kategori.index"
   );
   Route::post("/admin/kategori", [KategoriController::class, "store"])->name(
     "admin.kategori.store"
@@ -50,6 +51,11 @@ Route::middleware(["auth", "role:admin"])->group(function () {
     KategoriController::class,
     "destroy",
   ])->name("admin.kategori.destroy");
+
+  // LAPORAN ADMIN
+  Route::get("/admin/laporan", [LaporanController::class, "index"])->name(
+    "admin.laporan.index"
+  );
 });
 
 Route::middleware("auth")->group(function () {

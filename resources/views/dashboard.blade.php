@@ -30,17 +30,21 @@
       <a href="{{ route('admin.tambah.alat') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-sm transition-all">
         + Tambah Alat
       </a>
-      
-      <a href="{{ route('admin.kategori.create') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-sm transition-all">
+
+      <a href="{{ route('admin.kategori.index') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-sm transition-all">
         + Tambah Kategori
       </a>
+
+      <a href="{{ route('admin.laporan.index') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-sm transition-all">
+        📊 Lihat Laporan
+      </a>
     </div>
-    
+
     <div class="max-w-7xl mx-auto">
       <div class="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
         <div class="p-6 border-b border-gray-100">
           <h3 class="text-sm font-semibold uppercase tracking-wider
-          text-gray-700">Daftar Alat Tersedia</h3>
+            text-gray-700">Daftar Alat Tersedia</h3>
         </div>
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
@@ -70,7 +74,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- ADMIN SAJA -->
     <div class="max-w-7xl mx-auto">
       <div class="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
@@ -161,7 +165,7 @@
     @endif
 
     @if(Auth::user()->role && Auth::user()->role->nama_role == 'peminjam')
-    
+
     <div class="max-w-7xl mx-auto">
       <div class="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
         <div class="p-6 border-b border-gray-100">
