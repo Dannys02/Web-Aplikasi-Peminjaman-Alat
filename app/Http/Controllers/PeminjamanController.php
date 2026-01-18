@@ -10,35 +10,39 @@ class PeminjamanController extends Controller
 {
   public function store(Request $request, $id)
   {
-    // Cek apakah siswa ini sudah punya pinjaman aktif untuk barang tersebut
-    $adaPinjamanAktif = Peminjaman::where("user_id", auth()->id())
+    // 1. Cari data alat di awal agar tidak query berkali-kali
+    $alat = Alat::findOrFail($id);
+
+    // 2. Validasi Stok (Cukup satu kali di awal)
+    if ($alat->jumlah < 1) {
+      return redirect()
+        ->back()
+        ->with("error", "Maaf, stok alat ini sedang kosong!");
+    }
+
+    // 3. Validasi Pinjaman Aktif (Cukup satu kali)
+    // Mengecek apakah user masih punya status 'menunggu' atau 'dipinjam' untuk alat ini
+    $pinjamanAktif = Peminjaman::where("user_id", auth()->id())
       ->whereIn("status", ["menunggu", "dipinjam"])
       ->whereHas("alats", function ($query) use ($id) {
         $query->where("alats.id", $id);
       })
       ->exists();
 
-    if ($adaPinjamanAktif) {
+    if ($pinjamanAktif) {
       return redirect()
         ->back()
         ->with("error", "Kamu masih memiliki pinjaman aktif untuk alat ini!");
     }
 
-    // Cek Stok (Keamanan tambahan)
-    $alat = Alat::findOrFail($id);
-    if ($alat->jumlah < 1) {
-      return redirect()
-        ->back()
-        ->with("error", "Maaf, stok barang baru saja habis.");
-    }
-
-    // Proses Simpan (Kode yang sudah kamu buat sebelumnya)
+    // 4. Proses Simpan jika lolos semua validasi
     $pinjam = Peminjaman::create([
       "user_id" => auth()->id(),
       "tanggal_pinjam" => now(),
       "status" => "menunggu",
     ]);
 
+    // Attach ke tabel pivot detail_peminjamans
     $pinjam->alats()->attach($id, ["jumlah" => 1]);
 
     return redirect()

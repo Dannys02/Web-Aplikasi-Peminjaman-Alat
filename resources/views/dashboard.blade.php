@@ -26,6 +26,7 @@
   <div class="py-12 bg-gray-50 min-h-screen space-y-8 px-4 sm:px-6 lg:px-8">
 
     @if(Auth::user()->role && Auth::user()->role->nama_role == 'admin')
+    <!-- BUAT ALAT DAN KATEGORI -->
     <div class="flex justify-end gap-5 mb-4">
       <a href="{{ route('admin.tambah.alat') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-sm transition-all">
         + Tambah Alat
@@ -34,48 +35,11 @@
       <a href="{{ route('admin.kategori.index') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-sm transition-all">
         + Tambah Kategori
       </a>
-
-      <a href="{{ route('admin.laporan.index') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-sm transition-all">
-        📊 Lihat Laporan
-      </a>
     </div>
-
-    <div class="max-w-7xl mx-auto">
-      <div class="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
-        <div class="p-6 border-b border-gray-100">
-          <h3 class="text-sm font-semibold uppercase tracking-wider
-            text-gray-700">Daftar Alat Tersedia</h3>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama Alat</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kategori</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Stok</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-              @foreach($semuaAlat as $item)
-              <tr class="hover:bg-gray-50 transition-colors">
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $item->nama_alat }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <span class="bg-gray-100 px-2 py-1 rounded text-[11px] uppercase tracking-tighter">{{ $item->kategori->nama_kategori }}</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
-                  <span class="{{ $item->jumlah > 0 ? 'text-green-600 font-semibold' : 'text-red-500' }}">
-                    {{ $item->jumlah }}
-                  </span>
-                </td>
-              </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ADMIN SAJA -->
+    @endif
+    
+    @if(Auth::user()->role && Auth::user()->role->nama_role == 'petugas')
+    <!-- PERMINTAAN PEMINJAMAN -->
     <div class="max-w-7xl mx-auto">
       <div class="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
         <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-red-50/30">
@@ -119,8 +83,7 @@
         </div>
       </div>
     </div>
-
-    <!-- ADMIN SAJA ? -->
+    <!-- SEDANG DI PINJAM -->
     <div class="max-w-7xl mx-auto">
       <div class="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
         <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-blue-50/30">
@@ -165,7 +128,7 @@
     @endif
 
     @if(Auth::user()->role && Auth::user()->role->nama_role == 'peminjam')
-
+    <!-- DAFTAR ALAT -->
     <div class="max-w-7xl mx-auto">
       <div class="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
         <div class="p-6 border-b border-gray-100">
@@ -215,7 +178,7 @@
         </div>
       </div>
     </div>
-
+    <!-- STATUS PEMINJAMAN -->
     <div class="max-w-7xl mx-auto">
       <div class="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
         <div class="p-6 border-b border-gray-100 bg-emerald-50/20">

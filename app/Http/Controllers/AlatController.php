@@ -42,4 +42,26 @@ class AlatController extends Controller
       ->route("dashboard")
       ->with("success", "Alat baru berhasil ditambahkan!");
   }
+
+  public function destroy($id)
+  {
+    $alat = Alat::findOrFail($id);
+
+    // Cek apakah ada peminjaman aktif untuk alat ini
+    $adaPeminjam = $alat
+      ->peminjamans()
+      ->whereIn("status", ["menunggu", "dipinjam"])
+      ->exists();
+
+    if ($adaPeminjam) {
+      return redirect()
+        ->back()
+        ->with("error", "Alat tidak bisa dihapus karena sedang dipinjam!");
+    }
+
+    $alat->delete();
+    return redirect()
+      ->back()
+      ->with("success", "Alat berhasil dihapus dari sistem.");
+  }
 }
