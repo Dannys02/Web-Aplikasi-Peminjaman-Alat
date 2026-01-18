@@ -11,6 +11,6 @@ class LaporanController extends Controller
     {
         // Mengambil semua data peminjaman beserta relasi user dan alat
         $semuaLaporan = Peminjaman::with(['user', 'alats'])->latest()->get();
-        return view('admin.laporan-admin', compact('semuaLaporan'));
+        return view('petugas.laporan-petugas', compact('semuaLaporan'));
     }
 }

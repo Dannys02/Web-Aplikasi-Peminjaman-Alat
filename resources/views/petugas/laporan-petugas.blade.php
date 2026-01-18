@@ -10,7 +10,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm rounded-xl overflow-hidden border border-gray-100">
+            <div class="bg-white shadow-sm rounded-xl overflow-x-auto border border-gray-100">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>

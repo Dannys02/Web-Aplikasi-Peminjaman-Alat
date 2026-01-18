@@ -63,6 +63,16 @@ class PeminjamanController extends Controller
       $alat->decrement("jumlah", $jumlahPinjam); // Kurangi stok di tabel alats
     }
 
+    \App\Models\LogAktivitas::create([
+      "nama_user" => auth()->user()->name,
+      "peran" => auth()->user()->role->nama_role,
+      "aksi" =>
+        "Menyetujui peminjaman alat ID " .
+        $id .
+        " untuk user " .
+        $pinjam->user->name,
+    ]);
+
     return redirect()
       ->back()
       ->with("success", "Peminjaman telah disetujui!");
@@ -92,7 +102,7 @@ class PeminjamanController extends Controller
       );
   }
 
-  // 2. Fungsi BARU: Admin mengonfirmasi barang sudah oke atau menolak
+  // Fungsi BARU: Admin mengonfirmasi barang sudah oke atau menolak
   public function konfirmasiKembalikan(Request $request, $id)
   {
     $pinjam = Peminjaman::findOrFail($id);

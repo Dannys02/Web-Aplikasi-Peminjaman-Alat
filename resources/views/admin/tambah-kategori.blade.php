@@ -1,6 +1,6 @@
 <x-app-layout>
   <x-slot name="header">
-    <h2 class="font-semibold text-xl text-gray-800 leading-tight">Kelola Kategori Alat</h2>
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight">Manajemen Kategori Alat</h2>
   </x-slot>
 
   @if(session('success'))
@@ -34,12 +34,26 @@
             @foreach($kategoris as $k)
             <tr>
               <td class="px-6 py-4 text-sm text-gray-900 font-medium">{{ $k->nama_kategori }}</td>
-              <td class="px-6 py-4 text-center">
-                <form action="{{ route('admin.kategori.destroy', $k->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus?')">
-                  @csrf
-                  @method('DELETE')
-                  <button class="text-red-500 hover:text-red-700 text-xs font-bold uppercase tracking-widest">Hapus</button>
-                </form>
+              <td class="px-6 py-4">
+                <div class="flex justify-center items-center gap-2">
+                  <a href=""
+                    class="bg-amber-500 hover:bg-amber-600 text-white text-xs
+                    font-bold py-2 px-4 rounded-lg shadow-sm hover:shadow-md
+                    transition-all">
+                    Edit
+                  </a>
+
+                  <form action="{{ route('admin.kategori.destroy', $k->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kategori ini?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                      class="bg-red-600 hover:bg-red-700 text-white text-xs
+                      font-bold py-2 px-4 rounded-lg shadow-sm hover:shadow-md
+                      transition-all">
+                      Hapus
+                    </button>
+                  </form>
+                </div>
               </td>
             </tr>
             @endforeach

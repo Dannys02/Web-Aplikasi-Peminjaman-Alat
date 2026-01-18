@@ -65,7 +65,7 @@
                   @endforeach
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center">
-                  <form action="{{ route('admin.konfirmasi', $p->id) }}" method="POST">
+                  <form action="{{ route('petugas.konfirmasi', $p->id) }}" method="POST">
                     @csrf
                     <button class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold py-1.5 px-4 rounded-lg shadow-sm transition-all">
                       Setujui
@@ -114,7 +114,7 @@
                 </td>
                 <td class="px-6 py-4">
                   <div class="flex justify-center gap-4">
-                    <form action="{{ route('admin.konfirmasi_kembali', $p->id) }}" method="POST">
+                    <form action="{{ route('petugas.konfirmasi_kembali', $p->id) }}" method="POST">
                       @csrf
                       <input type="hidden" name="aksi" value="konfirmasi">
                       <button type="submit" title="Terima Pengembalian" class="group flex items-center justify-center w-9 h-9 rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all duration-300 shadow-sm border border-emerald-100">

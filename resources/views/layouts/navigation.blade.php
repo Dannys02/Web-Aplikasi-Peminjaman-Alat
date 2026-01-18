@@ -17,17 +17,25 @@
           </x-nav-link>
 
           @if(Auth::user()->role && Auth::user()->role->nama_role == 'admin')
+          <x-nav-link :href="route('admin.users.index')"
+          :active="request()->routeIs('admin.users.index')">
+            {{ __('User') }}
+          </x-nav-link>
           <x-nav-link :href="route('admin.tambah.alat')" :active="request()->routeIs('admin.kategori.*')">
             {{ __('Alat') }}
           </x-nav-link>
           <x-nav-link :href="route('admin.kategori.index')" :active="request()->routeIs('admin.kategori.*')">
             {{ __('Kategori') }}
           </x-nav-link>
+          <x-nav-link :href="route('admin.log.user')"
+          :active="request()->routeIs('admin.log.user')">
+            {{ __('Log Aktifitas') }}
+          </x-nav-link>
           @endif
 
           @if(Auth::user()->role && Auth::user()->role->nama_role ==
           'petugas')
-          <x-nav-link :href="route('admin.laporan.index')" :active="request()->routeIs('admin.laporan.*')">
+          <x-nav-link :href="route('petugas.laporan.index')" :active="request()->routeIs('petugas.laporan.index.*')">
             {{ __('Laporan') }}
           </x-nav-link>
           @endif
@@ -90,6 +98,10 @@
       </x-responsive-nav-link>
 
       @if(Auth::user()->role && Auth::user()->role->nama_role == 'admin')
+      <x-responsive-nav-link :href="route('admin.users.index')"
+        :active="request()->routeIs('admin.users.index*')">
+        {{ __('User') }}
+      </x-responsive-nav-link>
       <x-responsive-nav-link :href="route('admin.tambah.alat')"
         :active="request()->routeIs('admin.tambah.alat*')">
         {{ __('Alat') }}
@@ -97,15 +109,16 @@
       <x-responsive-nav-link :href="route('admin.kategori.index')" :active="request()->routeIs('admin.kategori.*')">
         {{ __('Kategori') }}
       </x-responsive-nav-link>
-
-      <x-responsive-nav-link :href="route('admin.laporan.index')" :active="request()->routeIs('admin.laporan.*')">
-        {{ __('Laporan') }}
+      <x-responsive-nav-link :href="route('admin.log.user')"
+      :active="request()->routeIs('admin.log.user')">
+        {{ __('Log Aktifitas') }}
       </x-responsive-nav-link>
       @endif
 
       @if(Auth::user()->role && Auth::user()->role->nama_role ==
       'petugas')
-      <x-responsive-nav-link :href="route('admin.laporan.index')" :active="request()->routeIs('admin.laporan.*')">
+      <x-responsive-nav-link :href="route('petugas.laporan.index')"
+      :active="request()->routeIs('petugas.laporan.index')">
         {{ __('Laporan') }}
       </x-responsive-nav-link>
       @endif

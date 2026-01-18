@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\UserController;
 
 Route::get("/", function () {
   return view("welcome");
@@ -15,11 +16,18 @@ Route::get("/dashboard", [AlatController::class, "index"])
   ->middleware(["auth", "verified"])
   ->name("dashboard");
 
-Route::post("/pinjam/{id}", [PeminjamanController::class, "store"])->name(
-  "pinjam.alat"
-);
-
 Route::middleware(["auth", "role:admin"])->group(function () {
+  // CRUD USERS
+  Route::get("/admin/users", [UserController::class, "index"])->name(
+    "admin.users.index"
+  );
+  Route::post("/admin/users", [UserController::class, "store"])->name(
+    "admin.users.store"
+  );
+  Route::delete("/admin/users/{id}", [UserController::class, "destroy"])->name(
+    "admin.users.destroy"
+  );
+
   // CRUD ALAT
   Route::get("/admin/tambah-alat", [AlatController::class, "create"])->name(
     "admin.tambah.alat"
@@ -39,26 +47,35 @@ Route::middleware(["auth", "role:admin"])->group(function () {
     KategoriController::class,
     "destroy",
   ])->name("admin.kategori.destroy");
+
+  // LOG AKTIFITAS
+  Route::get("/admin/log", function () {
+    return view("admin.log");
+  })->name("admin.log.user");
 });
 
 Route::middleware(["auth", "role:petugas"])->group(function () {
   // KONFIRMASI PINJAMAN
-  Route::post("/admin/konfirmasi/{id}", [
+  Route::post("/petugas/konfirmasi/{id}", [
     PeminjamanController::class,
     "konfirmasi",
-  ])->name("admin.konfirmasi");
+  ])->name("petugas.konfirmasi");
   // KONFIRMASI KEMBALIKAN
-  Route::post("/admin/konfirmasi-kembali/{id}", [
+  Route::post("/petugas/konfirmasi-kembali/{id}", [
     PeminjamanController::class,
     "konfirmasiKembalikan",
-  ])->name("admin.konfirmasi_kembali");
+  ])->name("petugas.konfirmasi_kembali");
   // LAPORAN ADMIN
-  Route::get("/admin/laporan", [LaporanController::class, "index"])->name(
-    "admin.laporan.index"
+  Route::get("/petugas/laporan", [LaporanController::class, "index"])->name(
+    "petugas.laporan.index"
   );
 });
 
 Route::middleware(["auth", "role:peminjam"])->group(function () {
+  // PINJAM
+  Route::post("/pinjam/{id}", [PeminjamanController::class, "store"])->name(
+    "pinjam.alat"
+  );
   // KEMBALIKAN
   Route::post("/admin/kembalikan/{id}", [
     PeminjamanController::class,
