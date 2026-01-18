@@ -37,7 +37,7 @@
       </a>
     </div>
     @endif
-    
+
     @if(Auth::user()->role && Auth::user()->role->nama_role == 'petugas')
     <!-- PERMINTAAN PEMINJAMAN -->
     <div class="max-w-7xl mx-auto">
@@ -83,41 +83,64 @@
         </div>
       </div>
     </div>
-    <!-- SEDANG DI PINJAM -->
+
+    <!-- MEMANTAU PENGEMBALIAN -->
     <div class="max-w-7xl mx-auto">
-      <div class="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
-        <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-blue-50/30">
-          <h3 class="text-sm font-semibold uppercase tracking-wider text-blue-600">Barang Sedang Dipinjam</h3>
+      <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+
+        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+          <h3 class="text-sm font-bold text-green-600 uppercase tracking-tight">Verifikasi Pengembalian</h3>
         </div>
+
         <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
+          <table class="min-w-full divide-y divide-gray-100">
             <thead class="bg-gray-50">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Peminjam</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Alat</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Manajemen</th>
+                <th class="px-6 py-3 text-left text-[10px] font-bold text-gray-400 uppercase">Peminjam</th>
+                <th class="px-6 py-3 text-left text-[10px] font-bold text-gray-400 uppercase">Alat</th>
+                <th class="px-6 py-3 text-center text-[10px] font-bold text-gray-400 uppercase">Opsi</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
-              @php $sedangDipinjam = \App\Models\Peminjaman::where('status', 'dipinjam')->get(); @endphp
-              @forelse($sedangDipinjam as $p)
-              <tr class="hover:bg-gray-50 transition-colors">
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $p->user->name }}</td>
-                <td class="px-6 py-4 text-sm text-gray-600">
-                  @foreach($p->alats as $a) {{ $a->nama_alat }}@if(!$loop->last), @endif @endforeach
+              @php
+              $pantauKembali = \App\Models\Peminjaman::where('status', 'menunggu_kembali')->get();
+              @endphp
+
+              @forelse($pantauKembali as $p)
+              <tr class="text-sm">
+                <td class="px-6 py-4 font-medium text-gray-800">{{ $p->user->name }}</td>
+                <td class="px-6 py-4 text-gray-500">
+                  @foreach($p->alats as $a) {{ $a->nama_alat }} @endforeach
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-center">
-                  <form action="{{ route('admin.kembalikan', $p->id) }}" method="POST">
-                    @csrf
-                    <button class="bg-orange-50 hover:bg-orange-100 text-orange-600 border border-orange-200 text-xs font-semibold py-1.5 px-4 rounded-lg transition-all">
-                      Selesai & Kembalikan
-                    </button>
-                  </form>
+                <td class="px-6 py-4">
+                  <div class="flex justify-center gap-4">
+                    <form action="{{ route('admin.konfirmasi_kembali', $p->id) }}" method="POST">
+                      @csrf
+                      <input type="hidden" name="aksi" value="konfirmasi">
+                      <button type="submit" title="Terima Pengembalian" class="group flex items-center justify-center w-9 h-9 rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all duration-300 shadow-sm border border-emerald-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </button>
+                    </form>
+
+                    <form action="{{ route('admin.konfirmasi_kembali', $p->id) }}" method="POST">
+                      @csrf
+                      <input type="hidden" name="aksi" value="batal">
+                      <button type="submit" title="Batalkan/Tolak" class="group flex items-center justify-center w-9 h-9 rounded-full bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm border border-red-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </form>
+                  </div>
                 </td>
               </tr>
               @empty
               <tr>
-                <td colspan="3" class="px-6 py-10 text-center text-gray-400 italic text-sm">Belum ada alat yang dipinjam</td>
+                <td colspan="3" class="px-6 py-8 text-center text-gray-400 text-xs italic">
+                  Tidak ada antrean pengembalian.
+                </td>
               </tr>
               @endforelse
             </tbody>
@@ -178,7 +201,7 @@
         </div>
       </div>
     </div>
-    <!-- STATUS PEMINJAMAN -->
+    <!-- SEDANG DI PINJAM & STATUS -->
     <div class="max-w-7xl mx-auto">
       <div class="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
         <div class="p-6 border-b border-gray-100 bg-emerald-50/20">
@@ -190,6 +213,7 @@
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Alat</th>
                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Status</th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Aksi</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
@@ -197,22 +221,36 @@
               <tr class="hover:bg-gray-50 transition-colors">
                 <td class="px-6 py-4 text-sm text-gray-900 font-medium">
                   @foreach($h->alats as $a)
-                  {{ $a->nama_alat }}
+                  {{ $a->nama_alat }}{{ !$loop->last ? ',' : '' }}
                   @endforeach
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center">
                   @if($h->status == 'menunggu')
-                  <span class="bg-amber-100 text-amber-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase">Menunggu Admin</span>
+                  <span class="bg-amber-100 text-amber-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase">Menunggu Persetujuan</span>
                   @elseif($h->status == 'dipinjam')
                   <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase">Sedang Dipakai</span>
+                  @elseif($h->status == 'menunggu_kembali')
+                  <span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase">Menunggu Konfirmasi Kembali</span>
                   @else
                   <span class="bg-gray-100 text-gray-500 text-[10px] font-bold px-2 py-1 rounded-full uppercase">Sudah Kembali</span>
+                  @endif
+                </td>
+                <td class="px-6 py-4 text-center">
+                  @if($h->status == 'dipinjam')
+                  <form action="{{ route('user.kembalikan', $h->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="bg-blue-50 text-blue-600 border border-blue-200 text-xs font-semibold py-1.5 px-4 rounded-lg hover:bg-blue-100 transition-colors">
+                      Kembalikan
+                    </button>
+                  </form>
+                  @else
+                  <span class="text-xs text-gray-400">-</span>
                   @endif
                 </td>
               </tr>
               @empty
               <tr>
-                <td colspan="2" class="px-6 py-8 text-center text-gray-400 text-sm italic">Belum ada aktivitas peminjaman.</td>
+                <td colspan="3" class="px-6 py-8 text-center text-gray-400 text-sm italic">Belum ada aktivitas peminjaman.</td>
               </tr>
               @endforelse
             </tbody>

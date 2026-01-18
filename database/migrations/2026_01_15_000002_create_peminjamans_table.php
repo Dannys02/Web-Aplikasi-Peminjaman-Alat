@@ -18,7 +18,8 @@ return new class extends Migration {
       $table->date("tanggal_kembali")->nullable();
       // Ini sistem statusnya pakai ENUM
       $table
-        ->enum("status", ["menunggu", "dipinjam", "dikembalikan"])
+        ->enum("status", ["menunggu", "dipinjam", "dikembalikan",
+        "menunggu_kembali"])
         ->default("menunggu");
       $table->timestamps();
     });

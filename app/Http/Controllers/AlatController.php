@@ -25,7 +25,9 @@ class AlatController extends Controller
   public function create()
   {
     $kategoris = \App\Models\Kategori::all();
-    return view("admin.tambah-alat", compact("kategoris"));
+    $semuaAlat = Alat::with("kategori")->get();
+    
+    return view("admin.tambah-alat", compact("kategoris", "semuaAlat"));
   }
 
   public function store(Request $request)
@@ -38,9 +40,7 @@ class AlatController extends Controller
 
     \App\Models\Alat::create($request->all());
 
-    return redirect()
-      ->route("dashboard")
-      ->with("success", "Alat baru berhasil ditambahkan!");
+    return back()->with("success", "Alat baru berhasil ditambahkan!");
   }
 
   public function destroy($id)

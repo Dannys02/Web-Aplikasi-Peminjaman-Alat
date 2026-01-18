@@ -17,10 +17,16 @@
           </x-nav-link>
 
           @if(Auth::user()->role && Auth::user()->role->nama_role == 'admin')
+          <x-nav-link :href="route('admin.tambah.alat')" :active="request()->routeIs('admin.kategori.*')">
+            {{ __('Alat') }}
+          </x-nav-link>
           <x-nav-link :href="route('admin.kategori.index')" :active="request()->routeIs('admin.kategori.*')">
             {{ __('Kategori') }}
           </x-nav-link>
+          @endif
 
+          @if(Auth::user()->role && Auth::user()->role->nama_role ==
+          'petugas')
           <x-nav-link :href="route('admin.laporan.index')" :active="request()->routeIs('admin.laporan.*')">
             {{ __('Laporan') }}
           </x-nav-link>
@@ -84,10 +90,21 @@
       </x-responsive-nav-link>
 
       @if(Auth::user()->role && Auth::user()->role->nama_role == 'admin')
+      <x-responsive-nav-link :href="route('admin.tambah.alat')"
+        :active="request()->routeIs('admin.tambah.alat*')">
+        {{ __('Alat') }}
+      </x-responsive-nav-link>
       <x-responsive-nav-link :href="route('admin.kategori.index')" :active="request()->routeIs('admin.kategori.*')">
         {{ __('Kategori') }}
       </x-responsive-nav-link>
 
+      <x-responsive-nav-link :href="route('admin.laporan.index')" :active="request()->routeIs('admin.laporan.*')">
+        {{ __('Laporan') }}
+      </x-responsive-nav-link>
+      @endif
+
+      @if(Auth::user()->role && Auth::user()->role->nama_role ==
+      'petugas')
       <x-responsive-nav-link :href="route('admin.laporan.index')" :active="request()->routeIs('admin.laporan.*')">
         {{ __('Laporan') }}
       </x-responsive-nav-link>

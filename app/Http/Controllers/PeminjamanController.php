@@ -10,17 +10,17 @@ class PeminjamanController extends Controller
 {
   public function store(Request $request, $id)
   {
-    // 1. Cari data alat di awal agar tidak query berkali-kali
+    // Cari data alat di awal agar tidak query berkali-kali
     $alat = Alat::findOrFail($id);
 
-    // 2. Validasi Stok (Cukup satu kali di awal)
+    // Validasi Stok (Cukup satu kali di awal)
     if ($alat->jumlah < 1) {
       return redirect()
         ->back()
         ->with("error", "Maaf, stok alat ini sedang kosong!");
     }
 
-    // 3. Validasi Pinjaman Aktif (Cukup satu kali)
+    // Validasi Pinjaman Aktif (Cukup satu kali)
     // Mengecek apakah user masih punya status 'menunggu' atau 'dipinjam' untuk alat ini
     $pinjamanAktif = Peminjaman::where("user_id", auth()->id())
       ->whereIn("status", ["menunggu", "dipinjam"])
@@ -68,31 +68,56 @@ class PeminjamanController extends Controller
       ->with("success", "Peminjaman telah disetujui!");
   }
 
+  // 1. Fungsi yang dipicu tombol "Selesai & Kembalikan" oleh Siswa/Admin di awal
   public function kembalikan($id)
   {
     $pinjam = Peminjaman::findOrFail($id);
 
-    // Pastikan hanya yang statusnya 'dipinjam' yang bisa dikembalikan
     if ($pinjam->status !== "dipinjam") {
       return redirect()
         ->back()
         ->with("error", "Status tidak valid.");
     }
 
-    // 1. Ubah status & isi tanggal_kembali
+    // Status berubah jadi menunggu_kembali (Barang sudah di meja admin, tapi belum dicek)
     $pinjam->update([
-      "status" => "dikembalikan",
-      "tanggal_kembali" => now(),
+      "status" => "menunggu_kembali",
     ]);
-
-    // 2. LOGIKA PENTING: Tambahkan kembali stok alat
-    foreach ($pinjam->alats as $alat) {
-      $jumlahPinjam = $alat->pivot->jumlah;
-      $alat->increment("jumlah", $jumlahPinjam); // Stok bertambah lagi
-    }
 
     return redirect()
       ->back()
-      ->with("success", "Barang telah dikembalikan!");
+      ->with(
+        "success",
+        "Permintaan pengembalian dikirim. Serahkan barang ke petugas!"
+      );
+  }
+
+  // 2. Fungsi BARU: Admin mengonfirmasi barang sudah oke atau menolak
+  public function konfirmasiKembalikan(Request $request, $id)
+  {
+    $pinjam = Peminjaman::findOrFail($id);
+    $aksi = $request->aksi; // Kita kirim input 'konfirmasi' atau 'batal'
+
+    if ($aksi == "konfirmasi") {
+      $pinjam->update([
+        "status" => "dikembalikan",
+        "tanggal_kembali" => now(),
+      ]);
+
+      // Stok bertambah kembali
+      foreach ($pinjam->alats as $alat) {
+        $alat->increment("jumlah", $alat->pivot->jumlah);
+      }
+
+      return redirect()
+        ->back()
+        ->with("success", "Pengembalian selesai, stok telah diperbarui!");
+    } else {
+      // Jika batal (misal barang rusak/kurang), balikkan status ke 'dipinjam'
+      $pinjam->update(["status" => "dipinjam"]);
+      return redirect()
+        ->back()
+        ->with("error", "Pengembalian dibatalkan.");
+    }
   }
 }

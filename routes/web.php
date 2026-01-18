@@ -20,18 +20,6 @@ Route::post("/pinjam/{id}", [PeminjamanController::class, "store"])->name(
 );
 
 Route::middleware(["auth", "role:admin"])->group(function () {
-  // KONFIRMASI PINJAMAN
-  Route::post("/admin/konfirmasi/{id}", [
-    PeminjamanController::class,
-    "konfirmasi",
-  ])->name("admin.konfirmasi");
-
-  // KONFIRMASI KEMBALIKAN
-  Route::post("/admin/kembalikan/{id}", [
-    PeminjamanController::class,
-    "kembalikan",
-  ])->name("admin.kembalikan");
-
   // CRUD ALAT
   Route::get("/admin/tambah-alat", [AlatController::class, "create"])->name(
     "admin.tambah.alat"
@@ -51,11 +39,31 @@ Route::middleware(["auth", "role:admin"])->group(function () {
     KategoriController::class,
     "destroy",
   ])->name("admin.kategori.destroy");
+});
 
+Route::middleware(["auth", "role:petugas"])->group(function () {
+  // KONFIRMASI PINJAMAN
+  Route::post("/admin/konfirmasi/{id}", [
+    PeminjamanController::class,
+    "konfirmasi",
+  ])->name("admin.konfirmasi");
+  // KONFIRMASI KEMBALIKAN
+  Route::post("/admin/konfirmasi-kembali/{id}", [
+    PeminjamanController::class,
+    "konfirmasiKembalikan",
+  ])->name("admin.konfirmasi_kembali");
   // LAPORAN ADMIN
   Route::get("/admin/laporan", [LaporanController::class, "index"])->name(
     "admin.laporan.index"
   );
+});
+
+Route::middleware(["auth", "role:peminjam"])->group(function () {
+  // KEMBALIKAN
+  Route::post("/admin/kembalikan/{id}", [
+    PeminjamanController::class,
+    "kembalikan",
+  ])->name("user.kembalikan");
 });
 
 Route::middleware("auth")->group(function () {
