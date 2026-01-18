@@ -24,19 +24,89 @@
   @endif
 
   <div class="py-12 bg-gray-50 min-h-screen space-y-8 px-4 sm:px-6 lg:px-8">
-
     @if(Auth::user()->role && Auth::user()->role->nama_role == 'admin')
-    <!-- BUAT ALAT DAN KATEGORI -->
-    <div class="flex justify-end gap-5 mb-4">
-      <a href="{{ route('admin.tambah.alat') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-sm transition-all">
-        + Tambah Alat
-      </a>
+    <div class="mb-8">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div>
+          <h2 class="text-xl font-semibold text-gray-800 leading-tight">Ringkasan Statistik</h2>
+          <p class="text-sm text-gray-500">
+            Pantau performa sistem Anda secara real-time.
+          </p>
+        </div>
+        <div class="flex gap-3">
+          <a href="{{ route('admin.tambah.alat') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+            + Alat
+          </a>
+          <a href="{{ route('admin.kategori.index') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+            + Kategori
+          </a>
+        </div>
+      </div>
 
-      <a href="{{ route('admin.kategori.index') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-sm transition-all">
-        + Tambah Kategori
-      </a>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-gray-500 uppercase">
+                Total User
+              </p>
+              <h3 class="text-2xl font-bold text-gray-900">{{ \App\Models\User::count() }}</h3>
+            </div>
+            <div class="p-3 bg-blue-50 rounded-lg text-blue-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-gray-500 uppercase">
+                Total Alat
+              </p>
+              <h3 class="text-2xl font-bold text-gray-900">{{ \App\Models\Alat::count() }}</h3>
+            </div>
+            <div class="p-3 bg-emerald-50 rounded-lg text-emerald-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"></path></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-gray-500 uppercase">
+                Kategori
+              </p>
+              <h3 class="text-2xl font-bold text-gray-900">{{ \App\Models\Kategori::count() }}</h3>
+            </div>
+            <div class="p-3 bg-amber-50 rounded-lg text-amber-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-gray-500 uppercase">
+                Aktivitas Hari Ini
+              </p>
+              <h3 class="text-2xl font-bold text-gray-900">{{
+              \App\Models\LogAktivitas::whereDate('created_at', today())->count()
+              }}</h3>
+            </div>
+            <div class="p-3 bg-purple-50 rounded-lg text-purple-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
     @endif
+
 
     @if(Auth::user()->role && Auth::user()->role->nama_role == 'petugas')
     <!-- PERMINTAAN PEMINJAMAN -->
@@ -124,7 +194,7 @@
                       </button>
                     </form>
 
-                    <form action="{{ route('admin.konfirmasi_kembali', $p->id) }}" method="POST">
+                    <form action="{{ route('petugas.konfirmasi_kembali', $p->id) }}" method="POST">
                       @csrf
                       <input type="hidden" name="aksi" value="batal">
                       <button type="submit" title="Batalkan/Tolak" class="group flex items-center justify-center w-9 h-9 rounded-full bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm border border-red-100">

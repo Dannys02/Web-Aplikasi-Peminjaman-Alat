@@ -45,6 +45,12 @@ class PeminjamanController extends Controller
     // Attach ke tabel pivot detail_peminjamans
     $pinjam->alats()->attach($id, ["jumlah" => 1]);
 
+    \App\Models\LogAktivitas::create([
+      "nama_user" => auth()->user()->name,
+      "peran" => auth()->user()->role->nama_role,
+      "aksi" => "Mengajukan peminjaman alat: " . $alat->nama_alat,
+    ]);
+
     return redirect()
       ->back()
       ->with("success", "Permintaan pinjam berhasil dikirim!");
@@ -67,8 +73,8 @@ class PeminjamanController extends Controller
       "nama_user" => auth()->user()->name,
       "peran" => auth()->user()->role->nama_role,
       "aksi" =>
-        "Menyetujui peminjaman alat ID " .
-        $id .
+        "Menyetujui peminjaman alat: " .
+        $alat->nama_alat .
         " untuk user " .
         $pinjam->user->name,
     ]);
@@ -78,7 +84,7 @@ class PeminjamanController extends Controller
       ->with("success", "Peminjaman telah disetujui!");
   }
 
-  // 1. Fungsi yang dipicu tombol "Selesai & Kembalikan" oleh Siswa/Admin di awal
+  // Fungsi yang dipicu tombol "Selesai & Kembalikan" oleh Siswa/Admin di awal
   public function kembalikan($id)
   {
     $pinjam = Peminjaman::findOrFail($id);
@@ -119,12 +125,35 @@ class PeminjamanController extends Controller
         $alat->increment("jumlah", $alat->pivot->jumlah);
       }
 
+      \App\Models\LogAktivitas::create([
+        "nama_user" => auth()->user()->name,
+        "peran" => auth()->user()->role->nama_role,
+        "aksi" =>
+          "mengonfirmasi pengembalian alat: " .
+          $alat->nama_alat .
+          " dari user " .
+          $pinjam->user->name,
+      ]);
+
       return redirect()
         ->back()
         ->with("success", "Pengembalian selesai, stok telah diperbarui!");
     } else {
       // Jika batal (misal barang rusak/kurang), balikkan status ke 'dipinjam'
+      $alat = Alat::findOrFail($id);
+
       $pinjam->update(["status" => "dipinjam"]);
+
+      \App\Models\LogAktivitas::create([
+        "nama_user" => auth()->user()->name,
+        "peran" => auth()->user()->role->nama_role,
+        "aksi" =>
+          "menolak pengembalian alat: " .
+          $alat->nama_alat .
+          " dari user " .
+          $pinjam->user->name,
+      ]);
+
       return redirect()
         ->back()
         ->with("error", "Pengembalian dibatalkan.");

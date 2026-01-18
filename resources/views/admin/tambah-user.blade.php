@@ -60,13 +60,19 @@
               </td>
               <td class="px-6 py-4 text-center">
                 @if($user->id !== auth()->id())
-                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Hapus user ini?')">
-                  @csrf @method('DELETE')
-                  <button class="bg-red-600 hover:bg-red-700
-                    text-white text-xs font-bold py-2 px-4
-                    rounded-lg shadow-sm hover:shadow-md
-                    transition-all"> Hapus </button>
-                </form>
+                <div class="flex justify-end gap-2">
+                  <a href="#" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-sm hover:shadow-md transition-all">
+                    Edit
+                  </a>
+
+                  <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Hapus user ini?')">
+                    @csrf @method('DELETE')
+                    <button class="bg-red-600 hover:bg-red-700
+                      text-white text-xs font-bold py-2 px-4
+                      rounded-lg shadow-sm hover:shadow-md
+                      transition-all"> Hapus </button>
+                  </form>
+                </div>
                 @else
                 <span class="text-[10px] text-gray-300 italic">Anda</span>
                 @endif

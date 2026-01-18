@@ -21,7 +21,8 @@
           :active="request()->routeIs('admin.users.index')">
             {{ __('User') }}
           </x-nav-link>
-          <x-nav-link :href="route('admin.tambah.alat')" :active="request()->routeIs('admin.kategori.*')">
+          <x-nav-link :href="route('admin.tambah.alat')"
+          :active="request()->routeIs('admin.tambah.alat')">
             {{ __('Alat') }}
           </x-nav-link>
           <x-nav-link :href="route('admin.kategori.index')" :active="request()->routeIs('admin.kategori.*')">
@@ -103,7 +104,7 @@
         {{ __('User') }}
       </x-responsive-nav-link>
       <x-responsive-nav-link :href="route('admin.tambah.alat')"
-        :active="request()->routeIs('admin.tambah.alat*')">
+        :active="request()->routeIs('admin.tambah.alat')">
         {{ __('Alat') }}
       </x-responsive-nav-link>
       <x-responsive-nav-link :href="route('admin.kategori.index')" :active="request()->routeIs('admin.kategori.*')">
