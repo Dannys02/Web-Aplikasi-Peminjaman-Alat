@@ -12,6 +12,8 @@ class AlatController extends Controller
   {
     // Mengambil semua data alat beserta kategorinya (Eager Loading)
     $semuaAlat = Alat::with("kategori")->get();
+    
+    $alat = Alat::all();
 
     $historySaya = \App\Models\Peminjaman::where("user_id", auth()->id())
       ->with("alats")
@@ -19,14 +21,14 @@ class AlatController extends Controller
       ->get();
 
     // Mengirim data ke view dashboard
-    return view("dashboard", compact("semuaAlat", "historySaya"));
+    return view("dashboard", compact("alat", "semuaAlat", "historySaya"));
   }
 
   public function create()
   {
     $kategoris = \App\Models\Kategori::all();
     $semuaAlat = Alat::with("kategori")->get();
-    
+
     return view("admin.tambah-alat", compact("kategoris", "semuaAlat"));
   }
 

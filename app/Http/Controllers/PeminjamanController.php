@@ -129,7 +129,7 @@ class PeminjamanController extends Controller
         "nama_user" => auth()->user()->name,
         "peran" => auth()->user()->role->nama_role,
         "aksi" =>
-          "mengonfirmasi pengembalian alat: " .
+          "Mengonfirmasi pengembalian alat: " .
           $alat->nama_alat .
           " dari user " .
           $pinjam->user->name,
@@ -148,7 +148,7 @@ class PeminjamanController extends Controller
         "nama_user" => auth()->user()->name,
         "peran" => auth()->user()->role->nama_role,
         "aksi" =>
-          "menolak pengembalian alat: " .
+          "Menolak pengembalian alat: " .
           $alat->nama_alat .
           " dari user " .
           $pinjam->user->name,

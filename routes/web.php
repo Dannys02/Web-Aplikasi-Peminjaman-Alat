@@ -35,6 +35,10 @@ Route::middleware(["auth", "role:admin"])->group(function () {
   Route::post("/admin/simpan-alat", [AlatController::class, "store"])->name(
     "admin.simpan.alat"
   );
+  Route::delete("/admin/alat/{id}", [
+    AlatController::class,
+    "destroy",
+  ])->name("admin.alat.destroy");
 
   // CRUD KATEGORI
   Route::get("/admin/kategori", [KategoriController::class, "index"])->name(
@@ -77,7 +81,7 @@ Route::middleware(["auth", "role:peminjam"])->group(function () {
     "pinjam.alat"
   );
   // KEMBALIKAN
-  Route::post("/admin/kembalikan/{id}", [
+  Route::post("/peminjam/kembalikan/{id}", [
     PeminjamanController::class,
     "kembalikan",
   ])->name("user.kembalikan");

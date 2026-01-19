@@ -7,6 +7,15 @@
     </div>
   </div>
   @endif
+  
+    @if(session('error'))
+  <div id="alert-error" class="fixed top-5 w-full max-w-7xl mx-auto mb-6">
+    <div class="bg-red-100 border border-red-200 text-red-700 px-4 py-3 rounded-xl shadow-sm flex items-center">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      {{ session('error') }}
+    </div>
+  </div>
+  @endif
 
   <!-- TAMBAH ALAT -->
   <div class="p-6">
@@ -81,7 +90,7 @@
                     Edit
                   </a>
 
-                  <form action="" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus alat ini?')">
+                  <form action="{{ route('admin.alat.destroy', $item->id ) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus alat ini?')">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-sm hover:shadow-md transition-all">
