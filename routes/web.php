@@ -12,7 +12,9 @@ Route::get("/", function () {
   return view("welcome");
 });
 
-Route::get("/dashboard", [AlatController::class, "index"])
+Route::get("/dashboard", function () {
+  return view("dashboard");
+})
   ->middleware(["auth", "verified"])
   ->name("dashboard");
 
@@ -35,10 +37,9 @@ Route::middleware(["auth", "role:admin"])->group(function () {
   Route::post("/admin/simpan-alat", [AlatController::class, "store"])->name(
     "admin.simpan.alat"
   );
-  Route::delete("/admin/alat/{id}", [
-    AlatController::class,
-    "destroy",
-  ])->name("admin.alat.destroy");
+  Route::delete("/admin/alat/{id}", [AlatController::class, "destroy"])->name(
+    "admin.alat.destroy"
+  );
 
   // CRUD KATEGORI
   Route::get("/admin/kategori", [KategoriController::class, "index"])->name(

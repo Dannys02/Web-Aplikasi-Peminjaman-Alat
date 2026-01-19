@@ -8,22 +8,6 @@ use App\Models\Peminjaman;
 
 class AlatController extends Controller
 {
-  public function index()
-  {
-    // Mengambil semua data alat beserta kategorinya (Eager Loading)
-    $semuaAlat = Alat::with("kategori")->get();
-    
-    $alat = Alat::all();
-
-    $historySaya = \App\Models\Peminjaman::where("user_id", auth()->id())
-      ->with("alats")
-      ->latest()
-      ->get();
-
-    // Mengirim data ke view dashboard
-    return view("dashboard", compact("alat", "semuaAlat", "historySaya"));
-  }
-
   public function create()
   {
     $kategoris = \App\Models\Kategori::all();
@@ -49,21 +33,20 @@ class AlatController extends Controller
   {
     $alat = Alat::findOrFail($id);
 
-    // Cek apakah ada peminjaman aktif untuk alat ini
-    $adaPeminjam = $alat
-      ->peminjamans()
-      ->whereIn("status", ["menunggu", "dipinjam"])
-      ->exists();
-
-    if ($adaPeminjam) {
+    // Cek apakah alat pernah terlibat dalam transaksi APAPUN (sedang dipinjam atau sudah selesai)
+    // Ini mengecek seluruh isi tabel pivot detail_peminjamans
+    if ($alat->peminjamans()->exists()) {
       return redirect()
         ->back()
-        ->with("error", "Alat tidak bisa dihapus karena sedang dipinjam!");
+        ->with(
+          "error",
+          "Alat tidak bisa dihapus karena memiliki riwayat peminjaman. Silakan ubah stok menjadi 0 saja jika alat sudah rusak."
+        );
     }
 
     $alat->delete();
     return redirect()
       ->back()
-      ->with("success", "Alat berhasil dihapus dari sistem.");
+      ->with("success", "Alat berhasil dihapus.");
   }
 }
