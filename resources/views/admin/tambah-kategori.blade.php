@@ -21,6 +21,24 @@
   </div>
   @endif
 
+  <div id="modalKategori" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
+    <div class="flex items-center justify-center min-h-screen p-4 text-center">
+      <div class="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl relative">
+        <h3 class="font-bold text-lg mb-4">Edit Kategori</h3>
+        <form id="formKategori" method="POST">
+          @csrf
+          @method('PUT')
+          <input type="text" name="nama_kategori" id="edit_nama_kategori" class="w-full border-gray-200 rounded-xl mb-4 text-sm" required>
+          <div class="flex gap-2">
+            <button type="button" onclick="closeKategori()" class="flex-1 py-2 text-gray-400 font-bold text-xs">Batal</button>
+            <button type="submit" class="flex-1 py-2 bg-indigo-600 text-white rounded-xl font-bold text-xs">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <div class="py-12">
     <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-6">
       <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
@@ -45,12 +63,13 @@
               <td class="px-6 py-4 text-sm text-gray-900 font-medium">{{ $k->nama_kategori }}</td>
               <td class="px-6 py-4">
                 <div class="flex justify-center items-center gap-2">
-                  <a href=""
+                  <button onclick="openEditKategori({{ $k->id }}, '{{
+                    $k->nama_kategori }}')"
                     class="bg-amber-500 hover:bg-amber-600 text-white text-xs
                     font-bold py-2 px-4 rounded-lg shadow-sm hover:shadow-md
                     transition-all">
                     Edit
-                  </a>
+                  </button>
 
                   <form action="{{ route('admin.kategori.destroy', $k->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kategori ini?')">
                     @csrf

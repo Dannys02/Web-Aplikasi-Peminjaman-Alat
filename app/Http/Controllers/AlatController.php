@@ -29,6 +29,27 @@ class AlatController extends Controller
     return back()->with("success", "Alat baru berhasil ditambahkan!");
   }
 
+  public function update(Request $request, $id)
+  {
+    $request->validate([
+      "nama_alat" => "required",
+      "kategori_id" => "required",
+      "jumlah" => "required|integer|min:0",
+    ]);
+
+    $alat = Alat::findOrFail($id);
+    $alat->update($request->all());
+
+    // Opsional: Catat ke Log Aktivitas
+    \App\Models\LogAktivitas::create([
+      "nama_user" => auth()->user()->name,
+      "peran" => auth()->user()->role->nama_role,
+      "aksi" => "MENGUBAH data alat: " . $alat->nama_alat,
+    ]);
+
+    return back()->with("success", "Data alat berhasil diperbarui!");
+  }
+
   public function destroy($id)
   {
     $alat = Alat::findOrFail($id);

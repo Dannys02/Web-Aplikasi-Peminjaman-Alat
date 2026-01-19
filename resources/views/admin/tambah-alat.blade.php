@@ -25,6 +25,52 @@
   </div>
   @endif
 
+  <div id="editModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
+
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div class="relative bg-white w-full max-w-md rounded-2xl shadow-2xl transform transition-all">
+        <div class="p-6 border-b border-gray-100">
+          <h3 class="text-lg font-bold text-gray-800">Edit Data Alat</h3>
+          <p class="text-xs text-gray-400">
+            Pastikan stok sesuai dengan kondisi fisik.
+          </p>
+        </div>
+
+        <form id="editForm" method="POST">
+          @csrf
+          @method('PUT')
+          <div class="p-6 space-y-4">
+            <div>
+              <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Nama Alat</label>
+              <input type="text" name="nama_alat" id="edit_nama" class="w-full border-gray-200 rounded-xl focus:ring-amber-500 focus:border-amber-500 text-sm" required>
+            </div>
+
+            <div>
+              <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Kategori</label>
+              <select name="kategori_id" id="edit_kategori" class="w-full border-gray-200 rounded-xl focus:ring-amber-500 focus:border-amber-500 text-sm">
+                @foreach($kategoris as $k)
+                <option value="{{ $k->id }}">{{ $k->nama_kategori }}</option>
+                @endforeach
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Jumlah Stok</label>
+              <input type="number" name="jumlah" id="edit_stok" class="w-full border-gray-200 rounded-xl focus:ring-amber-500 focus:border-amber-500 text-sm" required>
+            </div>
+          </div>
+
+          <div class="p-6 border-t border-gray-50 flex gap-3">
+            <button type="button" onclick="closeEditModal()" class="flex-1 px-4 py-2.5 border border-gray-200 text-gray-400 text-xs font-bold rounded-xl hover:bg-gray-50 transition">Batal</button>
+            <button type="submit" class="flex-1 px-4 py-2.5 bg-amber-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-amber-100 hover:bg-amber-600 transition">Update Data</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
   <!-- TAMBAH ALAT -->
   <div class="p-6">
     <div class="max-w-7xl mx-auto p-6">
@@ -98,10 +144,12 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right">
                   <div class="flex justify-end gap-2">
-                    <a href="#"
+                    <button onclick="openEditModal({{ $item->id }}, '{{
+                      $item->nama_alat }}', {{ $item->kategori_id }}, {{
+                      $item->jumlah }})"
                       class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-sm hover:shadow-md transition-all">
                       Edit
-                    </a>
+                    </button>
 
                     <form action="{{ route('admin.alat.destroy', $item->id) }}" method="POST"
                       onsubmit="return confirm('Apakah Anda yakin ingin menghapus alat ini?')">

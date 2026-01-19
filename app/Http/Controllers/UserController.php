@@ -38,6 +38,28 @@ class UserController extends Controller
       ->back()
       ->with("success", "User berhasil dibuat!");
   }
+  
+  public function update(Request $request, $id)
+{
+    $user = \App\Models\User::findOrFail($id);
+    
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,'.$id,
+        'role_id' => 'required',
+    ]);
+
+    $data = $request->only(['name', 'email', 'role_id']);
+
+    // Jika password diisi, baru kita update passwordnya
+    if ($request->filled('password')) {
+        $data['password'] = \Illuminate\Support\Facades\Hash::make($request->password);
+    }
+
+    $user->update($data);
+    return back()->with('success', 'Data user berhasil diperbarui!');
+}
+
 
   public function destroy($id)
   {

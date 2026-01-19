@@ -20,6 +20,47 @@
     </div>
   </div>
   @endif
+  
+  <div id="modalUser" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl p-8 shadow-2xl relative">
+            <h3 class="font-bold text-lg mb-6 text-gray-800">Edit Pengguna</h3>
+            <form id="formUser" method="POST" class="space-y-4 text-left">
+                @csrf @method('PUT')
+                
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase">Nama Lengkap</label>
+                    <input type="text" name="name" id="edit_user_name" class="w-full border-gray-200 rounded-xl text-sm" required>
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase">Email</label>
+                    <input type="email" name="email" id="edit_user_email" class="w-full border-gray-200 rounded-xl text-sm" required>
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase">Role</label>
+                    <select name="role_id" id="edit_user_role" class="w-full border-gray-200 rounded-xl text-sm">
+                        <option value="1">Admin</option>
+                        <option value="2">Petugas</option>
+                        <option value="3">Peminjam</option>
+                    </select>
+                </div>
+
+                <div class="bg-amber-50 p-3 rounded-xl">
+                    <label class="text-[10px] font-bold text-amber-600 uppercase">Ganti Password (Opsional)</label>
+                    <input type="password" name="password" class="w-full border-amber-200 rounded-xl text-sm mt-1" placeholder="Isi jika ingin ganti">
+                </div>
+
+                <div class="flex gap-3 pt-4">
+                    <button type="button" onclick="closeUser()" class="flex-1 py-3 text-gray-400 font-bold text-xs border border-gray-100 rounded-xl">Batal</button>
+                    <button type="submit" class="flex-1 py-3 bg-amber-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-amber-100">Update User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
   <div class="py-12 bg-gray-50 min-h-screen">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
@@ -70,9 +111,12 @@
               <td class="px-6 py-4 text-center">
                 @if($user->id !== auth()->id())
                 <div class="flex justify-end gap-2">
-                  <a href="#" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-sm hover:shadow-md transition-all">
+                  <button onclick="openEditUser({{ $user->id }}, '{{ $user->name }}',
+                  '{{ $user->email }}', {{ $user->role_id }})" class="bg-amber-500
+                  hover:bg-amber-600 text-white text-xs font-bold py-2 px-4
+                  rounded-lg shadow-sm hover:shadow-md transition-all">
                     Edit
-                  </a>
+                  </button>
 
                   <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Hapus user ini?')">
                     @csrf @method('DELETE')

@@ -26,6 +26,15 @@ class KategoriController extends Controller
       ->with("success", "Kategori berhasil ditambahkan!");
   }
 
+  public function update(Request $request, $id)
+  {
+    $request->validate(["nama_kategori" => "required|string|max:255"]);
+    $kategori = Kategori::findOrFail($id);
+    $kategori->update($request->all());
+
+    return back()->with("success", "Kategori berhasil diperbarui!");
+  }
+
   public function destroy($id)
   {
     $kategori = Kategori::findOrFail($id);
