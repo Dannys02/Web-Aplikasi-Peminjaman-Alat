@@ -8,6 +8,21 @@ use App\Models\Peminjaman;
 
 class AlatController extends Controller
 {
+  public function index()
+{
+    // 1. Ambil semua data alat untuk katalog
+    $semuaAlat = \App\Models\Alat::with("kategori")->get();
+
+    // 2. Ambil riwayat peminjaman khusus user yang sedang login
+    $historySaya = \App\Models\Peminjaman::where("user_id", auth()->id())
+        ->with("alats") // Pastikan relasi 'alats' ada di model Peminjaman
+        ->latest()
+        ->get();
+
+    // 3. Kirim kedua variabel ke view dashboard
+    return view("dashboard", compact("semuaAlat", "historySaya"));
+}
+
   public function create()
   {
     $kategoris = \App\Models\Kategori::all();

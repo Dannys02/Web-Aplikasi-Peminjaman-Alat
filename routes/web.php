@@ -12,9 +12,7 @@ Route::get("/", function () {
   return view("welcome");
 });
 
-Route::get("/dashboard", function () {
-  return view("dashboard");
-})
+Route::get("/dashboard", [AlatController::class, "index"])
   ->middleware(["auth", "verified"])
   ->name("dashboard");
 

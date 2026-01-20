@@ -139,24 +139,27 @@ class PeminjamanController extends Controller
         ->back()
         ->with("success", "Pengembalian selesai, stok telah diperbarui!");
     } else {
-      // Jika batal (misal barang rusak/kurang), balikkan status ke 'dipinjam'
-      $alat = Alat::findOrFail($id);
+        // 1. Ambil data peminjaman
+        $pinjam = Peminjaman::findOrFail($id);
 
-      $pinjam->update(["status" => "dipinjam"]);
+        // 2. Balikkan status ke 'dipinjam'
+        $pinjam->update(["status" => "dipinjam"]);
 
-      \App\Models\LogAktivitas::create([
-        "nama_user" => auth()->user()->name,
-        "peran" => auth()->user()->role->nama_role,
-        "aksi" =>
-          "Menolak pengembalian alat: " .
-          $alat->nama_alat .
-          " dari user " .
-          $pinjam->user->name,
-      ]);
+        // 3. Ambil nama alat melalui relasi (bukan findOrFail ID peminjaman)
+        // Kita ambil alat pertama yang ada di transaksi tersebut
+        $alatInfo = $pinjam->alats->first();
+        $namaAlat = $alatInfo ? $alatInfo->nama_alat : 'Alat Tidak Diketahui';
 
-      return redirect()
-        ->back()
-        ->with("error", "Pengembalian dibatalkan.");
+        \App\Models\LogAktivitas::create([
+            "nama_user" => auth()->user()->name,
+            "peran" => auth()->user()->role->nama_role,
+            "aksi" => "Menolak pengembalian alat: " . $namaAlat . " dari user " . $pinjam->user->name,
+        ]);
+
+        return redirect()
+            ->back()
+            ->with("error", "Pengembalian dibatalkan.");
     }
+
   }
 }
